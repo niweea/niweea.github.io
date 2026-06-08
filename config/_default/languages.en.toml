@@ -1,0 +1,11 @@
+locale = "en"
+label = "English"
+direction = "ltr"
+weight = 1
+
+title = "Niweea’s Blog"
+
+[params]
+  dateFormat = "2006-01-02"
+  mainSections = ["posts"]
+  description = "Continuously learning, moving forward"

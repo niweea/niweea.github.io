@@ -1,0 +1,48 @@
+/* assets/css/custom.css */
+
+/*
+  自定义 CSS：调整 Congo 主题在大于等于 1024px 屏幕上的
+  内容区域和目录区域的宽度占比。
+*/
+@media (min-width: 1024px) {
+    /*
+      定位包含内容和目录的 Flex 容器。
+    */
+    section.prose.lg\:flex-row {
+        /* 调整间距，例如 2rem, 3rem 等 */
+       gap: 3rem; 
+    }
+  
+    /*
+      定位主内容区域。
+    */
+    section.prose.lg\:flex-row > div.min-h-0.min-w-0.max-w-prose.grow {
+       /* 内容区域占比 75% */
+      flex: 1 1 75%;
+  
+      /* 同时显式设置 width 和 max-width 以确保覆盖主题默认设置（如 max-w-prose）*/
+      width: 75%;
+      /* 这会覆盖 lg:max-w-prose 类可能设置的最大宽度 */
+      max-width: 75%; 
+    }
+  
+    /*
+      定位目录 (TOC) 区域。
+    */
+    section.prose.lg\:flex-row > div.order-first.px-0.lg\:order-last.lg\:max-w-xs.lg\:ps-8 {
+      /* 目录区域占比 25% */
+      flex: 0 0 25%; 
+  
+      /* 同时显式设置 width 和 max-width */
+      width: 25%;
+      /* 这会覆盖 lg:max-w-xs 类设置的最大宽度 */
+      max-width: 25%; 
+    }
+
+    .toc nav ul li,
+        .toc nav ul li a {
+            font-size: 13px;
+            line-height: 1.5; 
+    }
+
+  }
