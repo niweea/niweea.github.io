@@ -51,7 +51,7 @@ fingerprintAlgorithm = "sha256"
   showTableOfContents = true
   showTaxonomies = true
   showWordCount = true
-  showComments = false
+  showComments = true
   sharingLinks = ["facebook", "x-twitter", "mastodon", "pinterest", "reddit", "linkedin", "email", "threads", "telegram", "line", "weibo"]
 
 [list]
@@ -79,6 +79,20 @@ fingerprintAlgorithm = "sha256"
 #[umamiAnalytics]
 #  site = "xxxxxxxx-xxxx-xxxx-xxxx-xxxxxxxxxxxx"
 #  region = "eu"  # can be either "eu" or "us"
+
+[giscus]
+  repo = "niweea/niweea.github.io"
+  repoId = "R_kgDOSz-dcw"
+  category = "Announcements"
+  categoryId = "DIC_kwDOSz-dc84DEJP3"
+  mapping = "pathname"
+  strict = "0"
+  reactionsEnabled = "1"
+  emitMetadata = "0"
+  inputPosition = "top"
+  theme = "preferred_color_scheme"
+  lang = "zh-CN"
+  loading = "lazy"
 
 [verification]
   # google = ""
