@@ -1,9 +1,9 @@
 {
   "version": "1",
   "tiny": {
-    "det": "https://hf-mirror.com/PaddlePaddle/PP-OCRv6_tiny_det_onnx/resolve/main/inference.onnx",
-    "rec": "https://hf-mirror.com/PaddlePaddle/PP-OCRv6_tiny_rec_onnx/resolve/main/inference.onnx",
-    "dict": "https://hf-mirror.com/PaddlePaddle/PP-OCRv6_tiny_rec_onnx/raw/main/inference.yml",
+    "det": "/models/ocr/tiny_det.onnx",
+    "rec": "/models/ocr/tiny_rec.onnx",
+    "dict": "/models/ocr/inference.yml",
     "detSizeBytes": 1780590,
     "recSizeBytes": 4462639
   },
