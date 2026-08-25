@@ -8,9 +8,8 @@
 import * as ort from 'onnxruntime-web';
 import type { ModelManifest, ModelManifestEntry, ModelScale, OrtBackend, ProgressMessage } from '../../types';
 
-// jsDelivr CDN for onnxruntime-web WASM files — avoids copying files from node_modules
-const ORT_VERSION = '1.29.0';
-export const WASM_CDN = `https://cdn.jsdelivr.net/npm/onnxruntime-web@${ORT_VERSION}/dist/`;
+// Local WASM runtime path served with the site — 100% version matched with node_modules
+export const WASM_PATH = '/ort/';
 
 export const MANIFEST_URL = '/models/ocr/manifest.json';
 
@@ -166,8 +165,9 @@ export async function loadModel(
   backend: OrtBackend,
   reportProgress: ProgressReporter,
 ): Promise<LoadedModel> {
-  // Configure WASM paths to CDN
-  ort.env.wasm.wasmPaths = WASM_CDN;
+  // Configure WASM paths to same-origin /ort/ (with full origin resolution in worker)
+  const wasmBase = typeof self !== 'undefined' && self.location ? self.location.origin + '/ort/' : '/ort/';
+  ort.env.wasm.wasmPaths = wasmBase;
   ort.env.wasm.numThreads = 1; // Single thread to avoid SharedArrayBuffer requirement
   if (backend === 'webgpu') {
     ort.env.wasm.proxy = false;

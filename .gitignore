@@ -5,3 +5,4 @@ resources/_gen/
 node_modules/
 static/models/ocr/*.onnx
 static/models/ocr/inference.yml
+static/ort/

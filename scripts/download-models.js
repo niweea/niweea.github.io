@@ -128,9 +128,28 @@ async function fetchAsset(asset) {
   throw new Error(`Failed to download ${asset.name} from all sources: ${lastError?.message}`);
 }
 
+function copyOrtWasm() {
+  const srcDir = path.join(__dirname, '..', 'node_modules', 'onnxruntime-web', 'dist');
+  const targetDir = path.join(__dirname, '..', 'static', 'ort');
+  if (!fs.existsSync(srcDir)) {
+    console.warn('[OCR Models] node_modules/onnxruntime-web/dist not found, skipping local WASM copy.');
+    return;
+  }
+  fs.mkdirSync(targetDir, { recursive: true });
+  const files = fs.readdirSync(srcDir).filter(f => f.startsWith('ort-wasm') && (f.endsWith('.wasm') || f.endsWith('.mjs')));
+  for (const f of files) {
+    fs.copyFileSync(path.join(srcDir, f), path.join(targetDir, f));
+  }
+  console.log(`[OCR Models] ✓ Copied ${files.length} ORT wasm/mjs runtime files to static/ort/ (100% version matched).`);
+}
+
 async function main() {
   fs.mkdirSync(TARGET_DIR, { recursive: true });
 
+  // 1. Copy exact matching WASM binaries from node_modules
+  copyOrtWasm();
+
+  // 2. Download ONNX models
   const targetScale = process.argv[2] || process.env.MODEL_SCALE || 'all';
   const assetsToDownload = targetScale === 'all'
     ? ALL_ASSETS
