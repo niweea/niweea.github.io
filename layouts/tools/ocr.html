@@ -1,0 +1,31 @@
+{{ define "main" }}
+{{ $workerOpts := dict
+    "targetPath" "js/ocr/worker.js"
+    "format"     "esm"
+    "minify"     (not hugo.IsDevelopment)
+}}
+{{ $worker := resources.Get "js/ocr/lib/ocr-worker.ts" | js.Build $workerOpts | fingerprint }}
+
+<script>
+  window.__OCR_WORKER_URL__ = "{{ $worker.RelPermalink }}";
+</script>
+
+<div class="ocr-page py-4">
+  <div id="ocr-root" data-worker-url="{{ $worker.RelPermalink }}"></div>
+</div>
+
+{{/* Build the React OCR app via Hugo Pipes / esbuild */}}
+{{ $jsOpts := dict
+    "targetPath" "js/ocr/app.js"
+    "format"     "esm"
+    "jsx"        "automatic"
+    "jsxImportSource" "react"
+    "minify"     (not hugo.IsDevelopment)
+    "sourceMap"  (cond hugo.IsDevelopment "inline" "")
+}}
+{{ $js := resources.Get "js/ocr/main.tsx" | js.Build $jsOpts | fingerprint }}
+<script type="module" src="{{ $js.RelPermalink }}"></script>
+
+{{ $css := resources.Get "css/ocr.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}">
+{{ end }}

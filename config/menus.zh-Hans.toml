@@ -35,6 +35,11 @@
     target = "_blank"
 
 [[main]]
+  name = "工具"
+  pageRef = "tools"
+  weight = 45
+
+[[main]]
   identifier = "搜索"
   weight = 99
   [main.params]
