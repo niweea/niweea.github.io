@@ -21,11 +21,15 @@ const CACHE_NAME = 'ppocr-models-v2';
 type ProgressCallback = (loaded: number, total: number) => void;
 
 async function doFetch(url: string): Promise<Response> {
+  const fullUrl = url.startsWith('/')
+    ? (typeof self !== 'undefined' && self.location ? self.location.origin + url : url)
+    : url;
+
   try {
-    const resp = await fetch(url);
+    const resp = await fetch(fullUrl);
     if (resp.ok) return resp;
   } catch (err) {
-    console.warn(`[OCR ModelManager] Failed to fetch ${url}:`, err);
+    console.warn(`[OCR ModelManager] Failed to fetch ${fullUrl}:`, err);
   }
 
   // Fallback to hf-mirror if huggingface.co fails
