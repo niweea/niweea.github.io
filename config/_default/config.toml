@@ -11,14 +11,8 @@ summaryLength = 10
 [pagination]
   pagerSize = 10
 
-  [outputs]
-    home = ["HTML", "RSS", "JSON", "CUSTOMCSS"]
+[outputs]
+  home = ["HTML", "RSS", "JSON"]
 
-  [outputFormats.CUSTOMCSS]
-    mediaType = "text/css"
-    baseName = "main"
-    isPlainText = true
-    notAlternative = true
-
-  [params]
-    customCSS = ["css/custom.css"]
+[params]
+  customCSS = ["css/custom.css"]

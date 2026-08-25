@@ -199,14 +199,37 @@ export async function loadModel(
     });
   });
 
-  // Create ONNX sessions
+  // Create ONNX sessions with safe fallback
   reportProgress({ stage: 'init_session', loaded: 0, total: 1, percent: 90, modelScale: scale });
 
-  const sessionOptions: Record<string, unknown> = { executionProviders: [backend] };
-  const [detSession, recSession] = await Promise.all([
-    ort.InferenceSession.create(new Uint8Array(detBuf), sessionOptions),
-    ort.InferenceSession.create(new Uint8Array(recBuf), sessionOptions),
-  ]);
+  let detSession: unknown;
+  let recSession: unknown;
+
+  if (backend === 'webgpu') {
+    try {
+      if (typeof navigator === 'undefined' || !('gpu' in navigator) || !navigator.gpu) {
+        throw new Error('WebGPU not supported in current environment');
+      }
+      const gpuOptions: Record<string, unknown> = { executionProviders: ['webgpu', 'wasm'] };
+      [detSession, recSession] = await Promise.all([
+        ort.InferenceSession.create(new Uint8Array(detBuf), gpuOptions),
+        ort.InferenceSession.create(new Uint8Array(recBuf), gpuOptions),
+      ]);
+    } catch (gpuErr) {
+      console.warn('[OCR ModelManager] WebGPU init failed, falling back to WASM:', gpuErr);
+      const wasmOptions: Record<string, unknown> = { executionProviders: ['wasm'] };
+      [detSession, recSession] = await Promise.all([
+        ort.InferenceSession.create(new Uint8Array(detBuf), wasmOptions),
+        ort.InferenceSession.create(new Uint8Array(recBuf), wasmOptions),
+      ]);
+    }
+  } else {
+    const wasmOptions: Record<string, unknown> = { executionProviders: ['wasm'] };
+    [detSession, recSession] = await Promise.all([
+      ort.InferenceSession.create(new Uint8Array(detBuf), wasmOptions),
+      ort.InferenceSession.create(new Uint8Array(recBuf), wasmOptions),
+    ]);
+  }
 
   // Load dictionary (fetch with Cache API support via fetchWithProgress or direct cache)
   let dictText = '';

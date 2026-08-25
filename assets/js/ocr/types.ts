@@ -68,6 +68,7 @@ export interface OcrStats {
   charCount: number;
   durationMs: number;
   modelScale: ModelScale;
+  confidence?: number;
 }
 
 export interface ModelManifestEntry {

@@ -1,18 +1,10 @@
 import React, { useCallback, useRef, useState } from 'react';
 import type { ModelStatus, OcrStatus } from '../types';
-import { ProgressBar } from './ProgressBar';
-
-interface ProgressState {
-  stage: string;
-  percent: number;
-  label: string;
-}
 
 interface UploadPanelProps {
   imageUrl: string | null;
   modelStatus: ModelStatus;
   ocrStatus: OcrStatus;
-  progress: ProgressState | null;
   onImageLoad: (url: string, data: ImageData) => void;
   onRecognize: () => void;
   onClear: () => void;
@@ -25,7 +17,6 @@ export function UploadPanel({
   imageUrl,
   modelStatus,
   ocrStatus,
-  progress,
   onImageLoad,
   onRecognize,
   onClear,
@@ -87,30 +78,52 @@ export function UploadPanel({
 
   const canRecognize = modelStatus === 'ready' && !!imageUrl && ocrStatus !== 'recognizing';
 
-  const stageLabels: Record<string, string> = {
-    download_det: '正在下载检测模型 (1/2)…',
-    download_rec: '正在下载识别模型 (2/2)…',
-    init_session:  '正在初始化推理引擎…',
-  };
-
   return (
-    <div className="ocr-card" style={{ display: 'flex', flexDirection: 'column', gap: '1rem' }}>
+    <div className="ocr-card" style={{ display: 'flex', flexDirection: 'column', gap: '0.75rem' }}>
+      {/* Top Header */}
+      <div style={{ display: 'flex', justifyContent: 'space-between', alignItems: 'center' }}>
+        <h2 style={{ margin: 0, fontSize: '1rem', fontWeight: 700 }}>预览</h2>
+        {imageUrl && (
+          <button
+            className="ocr-btn ocr-btn-secondary"
+            onClick={onClear}
+            style={{ fontSize: '0.75rem', padding: '0.2rem 0.55rem', color: '#ef4444', borderColor: '#fca5a5' }}
+          >
+            移除
+          </button>
+        )}
+      </div>
+
       {/* Upload zone / preview */}
       <div
         className={`ocr-upload-zone${dragging ? ' drag-over' : ''}`}
-        style={imageUrl ? { minHeight: 0, border: 'none', padding: 0 } : {}}
-        onClick={() => !imageUrl && fileInputRef.current?.click()}
+        style={{
+          flex: 1,
+          minHeight: '240px',
+          maxHeight: '400px',
+          overflow: 'hidden',
+          display: 'flex',
+          alignItems: 'center',
+          justifyContent: 'center',
+          ...(imageUrl ? { border: '1px solid #e5e7eb', padding: '0.25rem', cursor: 'pointer', background: '#fafafa' } : { cursor: 'pointer' })
+        }}
+        onClick={() => fileInputRef.current?.click()}
         onDrop={onDrop}
         onDragOver={e => { e.preventDefault(); setDragging(true); }}
         onDragLeave={() => setDragging(false)}
         onPaste={onPaste}
         tabIndex={0}
-        onKeyDown={e => e.key === 'Enter' && !imageUrl && fileInputRef.current?.click()}
+        onKeyDown={e => e.key === 'Enter' && fileInputRef.current?.click()}
         role="button"
         aria-label="上传待识别图片"
       >
         {imageUrl ? (
-          <img src={imageUrl} alt="已选图片" className="ocr-preview-img" />
+          <img
+            src={imageUrl}
+            alt="已选图片"
+            className="ocr-preview-img"
+            style={{ width: '100%', height: '100%', maxHeight: '380px', objectFit: 'contain', display: 'block', margin: 'auto' }}
+          />
         ) : (
           <>
             <svg style={{ width: '2.5rem', height: '2.5rem', marginBottom: '0.75rem', opacity: 0.4 }} fill="none" stroke="currentColor" viewBox="0 0 24 24">
@@ -132,40 +145,29 @@ export function UploadPanel({
         onChange={onFileChange}
       />
 
-      {/* Action buttons */}
-      <div style={{ display: 'flex', gap: '0.6rem', flexWrap: 'wrap' }}>
-        <button
-          className="ocr-btn ocr-btn-primary"
-          style={{ flex: '1 1 auto' }}
-          disabled={!canRecognize}
-          onClick={onRecognize}
-        >
-          {ocrStatus === 'recognizing' ? (
-            <><span className="ocr-spinner" />正在识别中…</>
-          ) : modelStatus === 'loading' ? (
-            <><span className="ocr-spinner" />模型加载中…</>
-          ) : (
-            '开始识别'
-          )}
-        </button>
-        {imageUrl && (
-          <button className="ocr-btn ocr-btn-secondary" onClick={() => { onClear(); }}>
-            清空
-          </button>
+      {/* Action button */}
+      <button
+        className="ocr-btn ocr-btn-primary"
+        style={{
+          width: '100%',
+          minHeight: '40px',
+          fontSize: '0.875rem',
+          fontWeight: 700,
+          boxShadow: canRecognize ? '0 2px 8px rgba(124, 58, 237, 0.35)' : 'none',
+        }}
+        disabled={!canRecognize}
+        onClick={onRecognize}
+      >
+        {ocrStatus === 'recognizing' ? (
+          <><span className="ocr-spinner" /> 正在识别中…</>
+        ) : modelStatus === 'loading' ? (
+          <><span className="ocr-spinner" /> 模型加载中…</>
+        ) : !imageUrl ? (
+          '请先上传图片'
+        ) : (
+          '开始识别'
         )}
-        <button className="ocr-btn ocr-btn-secondary" onClick={() => fileInputRef.current?.click()}>
-          {imageUrl ? '更换图片' : '选择图片'}
-        </button>
-      </div>
-
-      {/* Model loading progress */}
-      {progress && modelStatus === 'loading' && (
-        <ProgressBar
-          visible
-          percent={progress.percent}
-          label={stageLabels[progress.stage] ?? progress.stage}
-        />
-      )}
+      </button>
     </div>
   );
 }

@@ -34,6 +34,8 @@ type OcrHookAction =
   | { type: 'OCR_START' }
   | { type: 'OCR_DONE'; result: OcrResult }
   | { type: 'OCR_ERROR' }
+  | { type: 'CLEAR_RESULT' }
+  | { type: 'UPDATE_TEXT'; text: string }
   | { type: 'SET_SCALE'; scale: ModelScale }
   | { type: 'SET_BACKEND'; backend: OrtBackend };
 
@@ -53,6 +55,25 @@ function reducer(state: OcrHookState, action: OcrHookAction): OcrHookState {
       return { ...state, ocrStatus: 'done', result: action.result };
     case 'OCR_ERROR':
       return { ...state, ocrStatus: 'error' };
+    case 'CLEAR_RESULT':
+      return { ...state, ocrStatus: 'idle', result: null };
+    case 'UPDATE_TEXT': {
+      if (!state.result) return state;
+      const lines = action.text.split('\n');
+      return {
+        ...state,
+        result: {
+          ...state.result,
+          text: action.text,
+          lines,
+          stats: {
+            ...state.result.stats,
+            lineCount: action.text ? lines.length : 0,
+            charCount: action.text.replace(/\s/g, '').length,
+          },
+        },
+      };
+    }
     case 'SET_SCALE':
       return { ...state, modelScale: action.scale };
     case 'SET_BACKEND':
@@ -181,11 +202,21 @@ export function useOcr() {
     initModel(state.modelScale, state.backend);
   }, [initModel, state.modelScale, state.backend]);
 
+  const clearResult = useCallback(() => {
+    dispatch({ type: 'CLEAR_RESULT' });
+  }, []);
+
+  const updateResultText = useCallback((text: string) => {
+    dispatch({ type: 'UPDATE_TEXT', text });
+  }, []);
+
   return {
     ...state,
     recognize,
     setModelScale,
     setBackend,
     retryInit,
+    clearResult,
+    updateResultText,
   };
 }

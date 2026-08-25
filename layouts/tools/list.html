@@ -5,10 +5,10 @@
     <!-- PP-OCR Text Recognition Card -->
     <a href="{{ "tools/ocr" | relURL }}" class="tool-card group">
       <div class="tool-card-top">
-        <div class="tool-icon-wrapper">
+        <div class="tool-icon-wrapper" aria-hidden="true">
           <svg xmlns="http://www.w3.org/2000/svg" class="tool-icon" fill="none" viewBox="0 0 24 24" stroke="currentColor" stroke-width="2">
-            <path stroke-linecap="round" stroke-linejoin="round" d="M3 7v10a2 2 0 002 2h14a2 2 0 002-2V9a2 2 0 00-2-2h-6l-2-2H5a2 2 0 00-2 2z" />
-            <path stroke-linecap="round" stroke-linejoin="round" d="M9 13h6m-3-3v6" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M3 7V5a2 2 0 012-2h2m12 0h2a2 2 0 012 2v2m0 10v2a2 2 0 01-2 2h-2m-12 0H5a2 2 0 01-2-2v-2" />
+            <path stroke-linecap="round" stroke-linejoin="round" d="M9 16l3-8 3 8m-5-3h4" />
           </svg>
         </div>
         <span class="tool-badge-ready">
@@ -110,12 +110,14 @@
   height: 2.25rem;
   border-radius: 0.5rem;
   background: linear-gradient(135deg, rgba(139, 92, 246, 0.12), rgba(124, 58, 237, 0.2));
-  color: var(--color-primary-600, #7c3aed);
+  color: #7c3aed;
+  color: rgba(var(--color-primary-600), 1);
 }
 
 .dark .tool-icon-wrapper {
   background: linear-gradient(135deg, rgba(139, 92, 246, 0.2), rgba(124, 58, 237, 0.3));
-  color: var(--color-primary-400, #a78bfa);
+  color: #a78bfa;
+  color: rgba(var(--color-primary-400), 1);
 }
 
 .tool-icon {
@@ -208,12 +210,14 @@
   gap: 0.25rem;
   font-size: 0.78rem;
   font-weight: 600;
-  color: var(--color-primary-600, #7c3aed);
+  color: #7c3aed;
+  color: rgba(var(--color-primary-600), 1);
   transition: gap 0.15s ease;
 }
 
 .dark .tool-card-arrow {
-  color: var(--color-primary-400, #a78bfa);
+  color: #a78bfa;
+  color: rgba(var(--color-primary-400), 1);
 }
 
 .tool-card:hover .tool-card-arrow {

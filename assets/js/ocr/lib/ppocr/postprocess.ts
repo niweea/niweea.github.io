@@ -180,36 +180,84 @@ export function postprocessRec(
       }
     }
 
-    // Softmax probability for confidence
-    let expSum = 0;
-    for (let c = 0; c < C; c++) expSum += Math.exp(logits[offset + c] - maxVal);
-    const prob = 1 / expSum; // exp(maxVal - maxVal) / expSum = 1/expSum
-
     if (maxIdx !== 0 && maxIdx !== prevIdx) {
+      // Calculate proper probability (supporting both raw logits and softmaxed outputs)
+      let prob = 1.0;
+      if (maxVal >= 0 && maxVal <= 1) {
+        prob = maxVal;
+      } else {
+        let expSum = 0;
+        for (let c = 0; c < C; c++) {
+          expSum += Math.exp(logits[offset + c] - maxVal);
+        }
+        prob = expSum > 0 ? (1 / expSum) : 0.85;
+      }
+
       // blank=0 is skipped; dict is 0-indexed to char index 1
-      const ch = dict[maxIdx - 1] ?? '?';
-      text += ch;
-      confSum += prob;
-      confCount++;
+      const ch = (maxIdx > 0 && maxIdx <= dict.length) ? (dict[maxIdx - 1] ?? '') : '';
+      if (ch && ch !== '?') {
+        text += ch;
+        confSum += prob;
+        confCount++;
+      }
     }
     prevIdx = maxIdx;
   }
 
   return {
     text,
-    confidence: confCount > 0 ? confSum / confCount : 0,
+    confidence: confCount > 0 ? (confSum / confCount) : 0,
   };
 }
 
 // ── Dictionary loader ──────────────────────────────────────────────────────────
 
-let cachedDict: string[] | null = null;
+export function parseDict(content: string): string[] {
+  // If it's a YAML file containing character_dict (e.g. PP-OCR inference.yml)
+  if (content.includes('character_dict:')) {
+    const lines = content.split('\n');
+    let inDict = false;
+    const dict: string[] = [];
+    for (const line of lines) {
+      if (line.startsWith('  character_dict:')) {
+        inDict = true;
+        continue;
+      }
+      if (inDict) {
+        if (!line.startsWith('  - ')) {
+          if (line.trim() && !line.startsWith('  #')) break;
+          continue;
+        }
+        let val = line.slice(4);
+        if ((val.startsWith("'") && val.endsWith("'")) || (val.startsWith('"') && val.endsWith('"'))) {
+          val = val.slice(1, -1);
+          if (val === "''") val = "'";
+        }
+        dict.push(val);
+      }
+    }
+    if (!dict.includes(' ')) {
+      dict.push(' ');
+    }
+    return dict;
+  }
+
+  // Otherwise treat as plain newline-separated dictionary (like ppocr_keys_v1.txt)
+  const lines = content.split(/\r?\n/).map(l => l.trim()).filter(Boolean);
+  if (!lines.includes(' ')) {
+    lines.push(' ');
+  }
+  return lines;
+}
+
+let cachedDictMap = new Map<string, string[]>();
 
 export async function loadDict(url: string): Promise<string[]> {
-  if (cachedDict) return cachedDict;
+  if (cachedDictMap.has(url)) return cachedDictMap.get(url)!;
   const resp = await fetch(url);
   if (!resp.ok) throw new Error(`Failed to fetch dictionary: ${resp.status}`);
   const text = await resp.text();
-  cachedDict = text.split('\n').map(l => l.trim()).filter(Boolean);
-  return cachedDict;
+  const parsed = parseDict(text);
+  cachedDictMap.set(url, parsed);
+  return parsed;
 }

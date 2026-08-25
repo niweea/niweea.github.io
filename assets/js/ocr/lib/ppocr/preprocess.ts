@@ -15,9 +15,13 @@
 export const DET_MAX_SIDE = 960;
 export const REC_HEIGHT   = 48;
 
-// ImageNet normalization
-const MEAN = [0.485, 0.456, 0.406];
-const STD  = [0.229, 0.224, 0.225];
+// Detection ImageNet normalization
+const DET_MEAN = [0.485, 0.456, 0.406];
+const DET_STD  = [0.229, 0.224, 0.225];
+
+// Recognition standard normalization (PaddleOCR RecResizeImg)
+const REC_MEAN = [0.5, 0.5, 0.5];
+const REC_STD  = [0.5, 0.5, 0.5];
 
 // ── Detection preprocessing ───────────────────────────────────────────────────
 
@@ -40,8 +44,8 @@ export function preprocessForDet(imageData: ImageData): DetPreprocessResult {
   inputW = Math.ceil(inputW / 32) * 32;
   inputH = Math.ceil(inputH / 32) * 32;
 
-  const scaleW = inputW / origW;
-  const scaleH = inputH / origH;
+  const scaleW = origW / inputW;
+  const scaleH = origH / inputH;
 
   // Draw into an offscreen canvas at input resolution
   const canvas = new OffscreenCanvas(inputW, inputH);
@@ -52,16 +56,17 @@ export function preprocessForDet(imageData: ImageData): DetPreprocessResult {
   ctx.drawImage(tmp, 0, 0, inputW, inputH);
   const resized = ctx.getImageData(0, 0, inputW, inputH).data;
 
-  // HWC uint8 → CHW float32 normalized
+  // HWC uint8 (RGBA) → CHW float32 normalized (BGR mode for PP-OCR)
   const tensor = new Float32Array(3 * inputH * inputW);
   const planeSize = inputH * inputW;
   for (let i = 0; i < planeSize; i++) {
     const r = resized[i * 4]     / 255;
     const g = resized[i * 4 + 1] / 255;
     const b = resized[i * 4 + 2] / 255;
-    tensor[0 * planeSize + i] = (r - MEAN[0]) / STD[0];
-    tensor[1 * planeSize + i] = (g - MEAN[1]) / STD[1];
-    tensor[2 * planeSize + i] = (b - MEAN[2]) / STD[2];
+    // BGR channel order
+    tensor[0 * planeSize + i] = (b - DET_MEAN[0]) / DET_STD[0];
+    tensor[1 * planeSize + i] = (g - DET_MEAN[1]) / DET_STD[1];
+    tensor[2 * planeSize + i] = (r - DET_MEAN[2]) / DET_STD[2];
   }
 
   return { tensor, inputH, inputW, scaleH, scaleW };
@@ -93,27 +98,30 @@ export function preprocessForRec(
   // Cap to avoid OOM on huge detections
   const cappedW = Math.min(srcW, 4096);
 
-  // Warp via canvas (simple bounding box crop + resize for axis-aligned boxes;
-  // full perspective warp for rotated boxes)
-  const dstH = REC_HEIGHT;
-  const dstW = Math.max(1, Math.round(cappedW * (dstH / Math.max(srcH, 1))));
-
   const srcCanvas = new OffscreenCanvas(imageData.width, imageData.height);
   const srcCtx = srcCanvas.getContext('2d')!;
   srcCtx.putImageData(imageData, 0, 0);
 
+  // Clamp crop rectangle to valid image bounds
+  const xs = points.map(p => p[0]);
+  const ys = points.map(p => p[1]);
+  const minX = Math.max(0, Math.min(imageData.width - 1, Math.floor(Math.min(...xs))));
+  const minY = Math.max(0, Math.min(imageData.height - 1, Math.floor(Math.min(...ys))));
+  const maxX = Math.max(minX + 1, Math.min(imageData.width, Math.ceil(Math.max(...xs))));
+  const maxY = Math.max(minY + 1, Math.min(imageData.height, Math.ceil(Math.max(...ys))));
+
+  const cropW = maxX - minX;
+  const cropH = maxY - minY;
+
+  // Re-calculate dstW based on true crop aspect ratio (REC_HEIGHT = 48)
+  const dstH = REC_HEIGHT;
+  const ratio = cropW / Math.max(cropH, 1);
+  const dstW = Math.max(16, Math.min(3200, Math.round(dstH * ratio)));
+
   const dstCanvas = new OffscreenCanvas(dstW, dstH);
   const dstCtx = dstCanvas.getContext('2d')!;
 
-  // Use a simple approach: get the bounding box and let the browser scale
-  const xs = points.map(p => p[0]);
-  const ys = points.map(p => p[1]);
-  const minX = Math.max(0, Math.floor(Math.min(...xs)));
-  const minY = Math.max(0, Math.floor(Math.min(...ys)));
-  const maxX = Math.min(imageData.width,  Math.ceil(Math.max(...xs)));
-  const maxY = Math.min(imageData.height, Math.ceil(Math.max(...ys)));
-
-  dstCtx.drawImage(srcCanvas, minX, minY, maxX - minX, maxY - minY, 0, 0, dstW, dstH);
+  dstCtx.drawImage(srcCanvas, minX, minY, cropW, cropH, 0, 0, dstW, dstH);
   const pixels = dstCtx.getImageData(0, 0, dstW, dstH).data;
 
   const planeSize = dstH * dstW;
@@ -122,9 +130,10 @@ export function preprocessForRec(
     const r = pixels[i * 4]     / 255;
     const g = pixels[i * 4 + 1] / 255;
     const b = pixels[i * 4 + 2] / 255;
-    tensor[0 * planeSize + i] = (r - MEAN[0]) / STD[0];
-    tensor[1 * planeSize + i] = (g - MEAN[1]) / STD[1];
-    tensor[2 * planeSize + i] = (b - MEAN[2]) / STD[2];
+    // BGR channel order
+    tensor[0 * planeSize + i] = (b - REC_MEAN[0]) / REC_STD[0];
+    tensor[1 * planeSize + i] = (g - REC_MEAN[1]) / REC_STD[1];
+    tensor[2 * planeSize + i] = (r - REC_MEAN[2]) / REC_STD[2];
   }
 
   return { tensor, width: dstW };

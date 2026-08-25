@@ -22,6 +22,7 @@ import { preprocessForDet, preprocessForRec } from './ppocr/preprocess';
 import { postprocessDet, postprocessRec } from './ppocr/postprocess';
 
 let currentModel: LoadedModel | null = null;
+let currentModelScale: ModelScale = 'tiny';
 
 async function handleInit(cmd: InitCommand) {
   try {
@@ -29,6 +30,7 @@ async function handleInit(cmd: InitCommand) {
       self.postMessage({ type: 'PROGRESS', ...progress });
     });
     currentModel = model;
+    currentModelScale = cmd.modelScale;
     self.postMessage({ type: 'READY', modelScale: cmd.modelScale });
   } catch (err) {
     const message = err instanceof Error ? err.message : String(err);
@@ -78,7 +80,7 @@ async function handleRecognize(cmd: RecognizeCommand) {
         boxes: [],
         text: '',
         lines: [],
-        stats: { lineCount: 0, charCount: 0, durationMs, modelScale: cmd.modelScale ?? 'tiny' } as OcrStats,
+        stats: { lineCount: 0, charCount: 0, durationMs, modelScale: currentModelScale } as OcrStats,
       });
       return;
     }
@@ -94,6 +96,8 @@ async function handleRecognize(cmd: RecognizeCommand) {
       const bY = Math.min(...b.points.map(p => p[1]));
       return aY - bY;
     });
+
+    let totalConfidence = 0;
 
     for (const box of sorted) {
       const { tensor: recTensor, width: recW } = preprocessForRec(imageData, box.points);
@@ -122,11 +126,13 @@ async function handleRecognize(cmd: RecognizeCommand) {
       if (text.trim()) {
         resultBoxes.push({ points: box.points, text, confidence });
         lines.push(text);
+        totalConfidence += confidence;
       }
     }
 
     const fullText = lines.join('\n');
     const durationMs = Date.now() - startMs;
+    const avgConfidence = lines.length > 0 ? (totalConfidence / lines.length) : 0;
 
     self.postMessage({
       type: 'RESULT',
@@ -137,7 +143,8 @@ async function handleRecognize(cmd: RecognizeCommand) {
         lineCount: lines.length,
         charCount: fullText.replace(/\s/g, '').length,
         durationMs,
-        modelScale: cmd.modelScale ?? 'tiny',
+        modelScale: currentModelScale,
+        confidence: avgConfidence,
       } as OcrStats,
     });
   } catch (err) {

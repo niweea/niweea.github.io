@@ -4,6 +4,7 @@ import { UploadPanel } from './components/UploadPanel';
 import { ResultPanel } from './components/ResultPanel';
 import { ModelSelector } from './components/ModelSelector';
 import { StatusBadge } from './components/StatusBadge';
+import { ProgressBar } from './components/ProgressBar';
 import { ToastContainer, type Toast } from './components/ToastContainer';
 import { useOcr } from './hooks/useOcr';
 
@@ -52,6 +53,8 @@ export function OcrApp() {
     setBackend,
     recognize,
     retryInit,
+    clearResult,
+    updateResultText,
   } = useOcr();
 
   const toastCounter = useRef(0);
@@ -120,7 +123,7 @@ export function OcrApp() {
             PP-OCR 文字识别
           </h1>
           <p style={{ marginTop: '0.15rem', fontSize: '0.8125rem', opacity: 0.6 }}>
-            纯本地推理 — 图片绝不离开您的浏览器
+            基于 WebAssembly 纯本地离线推理 · 零数据上传 · 隐私全隔离
           </p>
         </div>
         <div style={{ display: 'flex', flexWrap: 'wrap', alignItems: 'center', gap: '0.5rem' }}>
@@ -138,16 +141,33 @@ export function OcrApp() {
         </div>
       </div>
 
+      {/* Model loading progress */}
+      {progress && modelStatus === 'loading' && (
+        <div style={{ marginBottom: '1rem' }}>
+          <ProgressBar
+            visible
+            percent={progress.percent}
+            label={{
+              download_det: '正在下载检测模型 (1/2)…',
+              download_rec: '正在下载识别模型 (2/2)…',
+              init_session: '正在初始化推理引擎…',
+            }[progress.stage] ?? progress.stage}
+          />
+        </div>
+      )}
+
       {/* Main grid: left upload / right results */}
       <div className="ocr-grid">
         <UploadPanel
           imageUrl={state.imageUrl}
           modelStatus={modelStatus}
           ocrStatus={ocrStatus}
-          progress={progress}
           onImageLoad={handleImageLoad}
           onRecognize={handleRecognize}
-          onClear={() => dispatch({ type: 'CLEAR_IMAGE' })}
+          onClear={() => {
+            dispatch({ type: 'CLEAR_IMAGE' });
+            clearResult();
+          }}
           onError={(msg) => addToast(msg, 'error')}
         />
         <ResultPanel
@@ -155,6 +175,7 @@ export function OcrApp() {
           ocrStatus={ocrStatus}
           onCopy={handleCopy}
           onDownload={handleDownload}
+          onChangeText={updateResultText}
         />
       </div>
 
