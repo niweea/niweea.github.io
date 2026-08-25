@@ -1,0 +1,1311 @@
+/* ============================================================
+   2FA / TOTP Authenticator Scoped Styles
+   Seamlessly integrates with Congo Theme (Light & Dark modes)
+   High contrast, clear typography, and unified green/amber/red states
+   ============================================================ */
+
+.twofa-page {
+  /* ── Light Mode Variables (High Contrast & Clear) ── */
+  --twofa-bg: #ffffff;
+  --twofa-surface: #f8fafc;
+  --twofa-surface-2: #f1f5f9;
+  --twofa-surface-3: #e2e8f0;
+  --twofa-border: #cbd5e1;
+  --twofa-border-strong: #94a3b8;
+
+  --twofa-text: #0f172a;        /* Deep slate 900 for sharp readability */
+  --twofa-text-dim: #334155;    /* Slate 700 - high contrast secondary */
+  --twofa-text-dimmer: #475569; /* Slate 600 - crisp readable metadata */
+
+  --twofa-card-bg: #ffffff;
+  --twofa-card-border: #e2e8f0;
+  --twofa-ticket-bg: #ffffff;
+  --twofa-ticket-border: #cbd5e1;
+
+  /* Three-stage alert colors (Light mode) */
+  --state-calm: #059669;        /* Emerald / Forest Green (>10s) */
+  --state-calm-soft: rgba(5, 150, 105, 0.12);
+  --state-calm-line: rgba(5, 150, 105, 0.35);
+
+  --state-warn: #d97706;        /* Alert Amber Yellow (6s~10s) */
+  --state-warn-soft: rgba(217, 119, 6, 0.12);
+  --state-warn-line: rgba(217, 119, 6, 0.35);
+
+  --state-danger: #dc2626;      /* Urgent Signal Red (<=5s) */
+  --state-danger-soft: rgba(220, 38, 38, 0.12);
+  --state-danger-line: rgba(220, 38, 38, 0.35);
+
+  --approved: #059669;
+  --approved-soft: rgba(5, 150, 105, 0.12);
+  --approved-line: rgba(5, 150, 105, 0.35);
+
+  --mono: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+  --sans: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+
+  font-family: var(--sans);
+  width: 100%;
+  color: var(--twofa-text);
+  position: relative;
+}
+
+/* ── Dark Mode Variables (High Contrast) ── */
+.dark .twofa-page {
+  --twofa-bg: rgba(38, 38, 38, 0.85);
+  --twofa-surface: #262626;
+  --twofa-surface-2: #1f1f1f;
+  --twofa-surface-3: #333333;
+  --twofa-border: #404040;
+  --twofa-border-strong: #525252;
+
+  --twofa-text: #ffffff;        /* Pure white for dark mode */
+  --twofa-text-dim: #e2e8f0;    /* Light slate for secondary text */
+  --twofa-text-dimmer: #cbd5e1; /* High readability muted text */
+
+  --twofa-card-bg: rgba(38, 38, 38, 0.9);
+  --twofa-card-border: #404040;
+  --twofa-ticket-bg: #262626;
+  --twofa-ticket-border: #404040;
+
+  /* Three-stage alert colors (Dark mode) */
+  --state-calm: #10b981;        /* Vibrant Emerald Green (>10s) */
+  --state-calm-soft: rgba(16, 185, 129, 0.16);
+  --state-calm-line: rgba(16, 185, 129, 0.4);
+
+  --state-warn: #f59e0b;        /* Alert Amber Yellow (6s~10s) */
+  --state-warn-soft: rgba(245, 158, 11, 0.18);
+  --state-warn-line: rgba(245, 158, 11, 0.45);
+
+  --state-danger: #ef4444;      /* Urgent Signal Red (<=5s) */
+  --state-danger-soft: rgba(239, 68, 68, 0.2);
+  --state-danger-line: rgba(239, 68, 68, 0.5);
+
+  --approved: #34d399;
+  --approved-soft: rgba(52, 211, 153, 0.16);
+  --approved-line: rgba(52, 211, 153, 0.4);
+}
+
+.twofa-page *,
+.twofa-page *::before,
+.twofa-page *::after {
+  box-sizing: border-box;
+}
+
+.twofa-app {
+  width: 100%;
+  margin: 0 auto;
+  display: flex;
+  flex-direction: column;
+}
+
+.twofa-grid {
+  display: grid;
+  grid-template-columns: 1fr;
+  gap: 1.5rem;
+  width: 100%;
+  margin-top: 0.5rem;
+}
+
+@media (min-width: 1024px) {
+  .twofa-grid {
+    grid-template-columns: 1fr 1fr;
+    gap: 2rem;
+    align-items: start;
+  }
+}
+
+.twofa-col-left,
+.twofa-col-right {
+  display: flex;
+  flex-direction: column;
+  min-width: 0;
+  width: 100%;
+}
+
+/* ============================================================
+   TITLE BLOCK
+   ============================================================ */
+.twofa-titleblock {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0.25rem 0 1rem;
+  border-bottom: 1.5px solid var(--twofa-border);
+  gap: 1rem;
+}
+
+.twofa-titleblock-name {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  font-size: 1.45rem;
+  font-weight: 800;
+  letter-spacing: -0.01em;
+  color: var(--twofa-text);
+}
+
+.twofa-compass {
+  width: 26px;
+  height: 26px;
+  color: var(--state-calm);
+  flex-shrink: 0;
+}
+
+.twofa-titleblock-actions {
+  display: flex;
+  gap: 8px;
+}
+
+.twofa-iconbtn {
+  width: 38px;
+  height: 38px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: var(--twofa-surface);
+  border: 1.5px solid var(--twofa-border);
+  border-radius: 6px;
+  color: var(--twofa-text-dim);
+  cursor: pointer;
+  transition: all 0.15s ease;
+}
+
+.twofa-iconbtn:hover {
+  background: var(--twofa-surface-2);
+  border-color: var(--twofa-border-strong);
+  color: var(--twofa-text);
+}
+
+.twofa-iconbtn svg {
+  width: 18px;
+  height: 18px;
+}
+
+/* ============================================================
+   SPEC INPUT
+   ============================================================ */
+.twofa-spec {
+  padding: 1.25rem 0 0.5rem;
+}
+
+.twofa-spec-label {
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  letter-spacing: 0.04em;
+  color: var(--twofa-text-dim);
+  margin-bottom: 8px;
+}
+
+.twofa-spec-label::before {
+  content: '§';
+  color: var(--state-calm);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.twofa-spec-row {
+  display: flex;
+  gap: 8px;
+}
+
+.twofa-spec-field {
+  position: relative;
+  flex: 1;
+}
+
+.twofa-spec-field::before,
+.twofa-spec-field::after {
+  content: '';
+  position: absolute;
+  width: 8px;
+  height: 8px;
+  border-color: var(--state-calm);
+  z-index: 2;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.twofa-spec-field.focus::before,
+.twofa-spec-field.focus::after {
+  opacity: 1;
+}
+
+.twofa-spec-field::before {
+  top: -1px;
+  left: -1px;
+  border-top: 2px solid;
+  border-left: 2px solid;
+}
+
+.twofa-spec-field::after {
+  bottom: -1px;
+  right: -1px;
+  border-bottom: 2px solid;
+  border-right: 2px solid;
+}
+
+.twofa-spec-input {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--twofa-surface);
+  border: 1.5px solid var(--twofa-border);
+  border-radius: 6px;
+  color: var(--twofa-text);
+  font-family: var(--mono);
+  font-size: 13.5px;
+  font-weight: 400;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+  line-height: 1.4;
+}
+
+.twofa-spec-input::placeholder {
+  color: #94a3b8;
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 400;
+}
+
+.dark .twofa-spec-input::placeholder {
+  color: #71717a;
+}
+
+.twofa-spec-input:focus {
+  border-color: var(--state-calm);
+  background: var(--twofa-card-bg);
+}
+
+.twofa-paste-btn {
+  padding: 0 18px;
+  background: var(--twofa-surface);
+  border: 1.5px solid var(--twofa-border);
+  border-radius: 6px;
+  color: var(--twofa-text-dim);
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  white-space: nowrap;
+}
+
+.twofa-paste-btn:hover {
+  background: var(--twofa-surface-2);
+  border-color: var(--state-calm-line);
+  color: var(--state-calm);
+}
+
+.twofa-paste-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+.twofa-spec-hint {
+  margin-top: 8px;
+  font-size: 12.5px;
+  font-weight: 400;
+  color: var(--twofa-text-dimmer);
+  line-height: 1.6;
+}
+
+.twofa-spec-hint b {
+  color: var(--twofa-text-dim);
+  font-weight: 600;
+}
+
+.twofa-spec-hint.error {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  color: var(--state-warn);
+  font-weight: 600;
+  animation: twofa-shake 0.25s ease;
+}
+
+.twofa-spec-hint.error svg {
+  width: 14px;
+  height: 14px;
+  flex-shrink: 0;
+}
+
+.twofa-spec-field.has-error .twofa-spec-input {
+  border-color: var(--state-warn);
+}
+
+@keyframes twofa-shake {
+  0%, 100% { transform: translateX(0); }
+  25% { transform: translateX(-3px); }
+  75% { transform: translateX(3px); }
+}
+
+/* ============================================================
+   READOUT CARD
+   ============================================================ */
+.twofa-readout-zone {
+  padding: 1.25rem 0 0.5rem;
+  animation: twofa-rise 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+}
+
+@keyframes twofa-rise {
+  from { opacity: 0; transform: translateY(8px); }
+  to   { opacity: 1; transform: translateY(0); }
+}
+
+.twofa-readout {
+  background: var(--twofa-card-bg);
+  border: 1.5px solid var(--twofa-card-border);
+  border-radius: 8px;
+  position: relative;
+  overflow: hidden;
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.05);
+}
+
+.dark .twofa-readout {
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.25);
+}
+
+.twofa-readout-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 16px 20px 0;
+  gap: 12px;
+}
+
+.twofa-readout-service {
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  min-width: 0;
+}
+
+.twofa-readout-service-dot {
+  width: 10px;
+  height: 10px;
+  border-radius: 50%;
+  background: var(--state-calm);
+  box-shadow: 0 0 0 3px var(--state-calm-soft);
+  flex-shrink: 0;
+}
+
+.twofa-readout-service-text {
+  min-width: 0;
+}
+
+.twofa-readout-service-name {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--twofa-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.twofa-readout-service-account {
+  font-size: 12.5px;
+  font-family: var(--mono);
+  font-weight: 500;
+  color: var(--twofa-text-dimmer);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+/* Badge */
+.twofa-stamp-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 5px;
+  font-size: 12px;
+  font-weight: 700;
+  padding: 6px 14px;
+  border-radius: 6px;
+  border: 1.5px solid var(--state-calm-line);
+  color: var(--state-calm);
+  background: var(--state-calm-soft);
+  cursor: pointer;
+  transition: all 0.15s ease;
+  flex-shrink: 0;
+}
+
+.twofa-stamp-badge:hover:not(:disabled) {
+  background: var(--state-calm);
+  color: #ffffff;
+}
+
+.twofa-stamp-badge:active:not(:disabled) {
+  transform: scale(0.96);
+}
+
+.twofa-stamp-badge.saved {
+  border-color: var(--approved-line);
+  color: var(--approved);
+  background: var(--approved-soft);
+  cursor: default;
+}
+
+/* ============================================================
+   CLEAN DIAL (NO TICKS, 3-STAGE ALERT)
+   ============================================================ */
+.twofa-dial-wrap {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 22px 20px 10px;
+}
+
+.twofa-dial {
+  position: relative;
+  width: 210px;
+  height: 210px;
+}
+
+.twofa-dial svg {
+  width: 100%;
+  height: 100%;
+  transform: rotate(-90deg);
+}
+
+.twofa-dial-track {
+  fill: none;
+  stroke: var(--twofa-border);
+  stroke-width: 6;
+}
+
+.twofa-dial-fill {
+  fill: none;
+  stroke-width: 6;
+  stroke-linecap: round;
+  transition: stroke-dashoffset 0.95s linear, stroke 0.3s ease;
+}
+
+.twofa-dial-fill.calm   { stroke: var(--state-calm); }
+.twofa-dial-fill.warn   { stroke: var(--state-warn); }
+.twofa-dial-fill.danger { stroke: var(--state-danger); }
+
+.twofa-dial-center {
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 8px;
+  cursor: pointer;
+  padding: 12px;
+}
+
+.twofa-dial-code {
+  font-family: var(--mono);
+  font-size: 29px;
+  font-weight: 800;
+  letter-spacing: 0.06em;
+  color: var(--twofa-text);
+  line-height: 1;
+  transition: transform 0.15s ease;
+  white-space: nowrap;
+}
+
+.twofa-dial-code.flash {
+  animation: twofa-codeFlash 0.3s ease;
+}
+
+@keyframes twofa-codeFlash {
+  0%   { opacity: 0.2; transform: scale(0.96); }
+  60%  { opacity: 1; }
+  100% { opacity: 1; transform: scale(1); }
+}
+
+.twofa-dial-ttl {
+  font-family: var(--sans);
+  font-size: 13px;
+  font-weight: 700;
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  transition: color 0.3s ease;
+}
+
+.twofa-dial-ttl.calm   { color: var(--state-calm); }
+.twofa-dial-ttl.warn   { color: var(--state-warn); }
+.twofa-dial-ttl.danger { color: var(--state-danger); }
+
+.twofa-timer-dot {
+  width: 7px;
+  height: 7px;
+  border-radius: 50%;
+  background: currentColor;
+  display: inline-block;
+}
+
+.twofa-readout-foot {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 10px;
+  padding: 10px 16px 18px;
+  flex-wrap: wrap;
+}
+
+.twofa-instr-btn {
+  padding: 9px 18px;
+  border-radius: 6px;
+  font-family: var(--sans);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid var(--twofa-border);
+  background: var(--twofa-surface);
+  color: var(--twofa-text);
+  transition: all 0.15s ease;
+  display: flex;
+  align-items: center;
+  gap: 7px;
+}
+
+.twofa-instr-btn:hover {
+  border-color: var(--twofa-border-strong);
+  background: var(--twofa-surface-2);
+}
+
+.twofa-instr-btn.primary {
+  background: var(--state-calm);
+  border-color: var(--state-calm);
+  color: #ffffff;
+}
+
+.twofa-instr-btn.primary:hover {
+  opacity: 0.92;
+  filter: brightness(1.05);
+}
+
+.twofa-instr-btn.copied {
+  color: var(--approved);
+  border-color: var(--approved);
+  background: var(--approved-soft);
+}
+
+.twofa-instr-btn svg {
+  width: 15px;
+  height: 15px;
+}
+
+/* ============================================================
+   SAVED ACCOUNTS LIST
+   ============================================================ */
+.twofa-vault {
+  padding: 1.25rem 0 2rem;
+  flex: 1;
+}
+
+.twofa-vault-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 12px;
+}
+
+.twofa-vault-title {
+  font-size: 13px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  color: var(--twofa-text-dim);
+  display: flex;
+  align-items: baseline;
+  gap: 6px;
+}
+
+.twofa-vault-title::before {
+  content: '§';
+  color: var(--state-calm);
+  font-size: 14px;
+  font-weight: 800;
+}
+
+.twofa-vault-count {
+  font-family: var(--mono);
+  font-size: 12px;
+  font-weight: 700;
+  color: var(--twofa-text-dim);
+  background: var(--twofa-surface);
+  border: 1.5px solid var(--twofa-border);
+  padding: 2px 10px;
+  border-radius: 4px;
+}
+
+.twofa-vault-search-wrap {
+  position: relative;
+  margin-bottom: 12px;
+  display: block;
+}
+
+.twofa-vault-search-wrap svg {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  width: 16px;
+  height: 16px;
+  color: var(--twofa-text-dimmer);
+  pointer-events: none;
+}
+
+.twofa-vault-search {
+  width: 100%;
+  padding: 10px 12px 10px 36px;
+  background: var(--twofa-surface);
+  border: 1.5px solid var(--twofa-border);
+  border-radius: 6px;
+  color: var(--twofa-text);
+  font-family: var(--sans);
+  font-size: 13.5px;
+  outline: none;
+  transition: border-color 0.15s, background 0.15s;
+}
+
+.twofa-vault-search::placeholder {
+  color: var(--twofa-text-dimmer);
+}
+
+.twofa-vault-search:focus {
+  border-color: var(--state-calm);
+  background: var(--twofa-card-bg);
+}
+
+.twofa-vault-no-match {
+  text-align: center;
+  padding: 24px 16px;
+  color: var(--twofa-text-dimmer);
+  font-size: 13.5px;
+  font-weight: 500;
+}
+
+.twofa-vault-list {
+  display: flex;
+  flex-direction: column;
+  gap: 9px;
+}
+
+/* Ticket Card */
+.twofa-ticket {
+  position: relative;
+  display: flex;
+  align-items: center;
+  gap: 12px;
+  padding: 13px 16px;
+  background: var(--twofa-ticket-bg);
+  border: 1.5px solid var(--twofa-ticket-border);
+  border-radius: 6px;
+  cursor: pointer;
+  transition: transform 0.12s ease, box-shadow 0.15s ease, border-color 0.15s ease;
+  box-shadow: 0 1px 3px rgba(0, 0, 0, 0.04);
+}
+
+.twofa-ticket:hover {
+  transform: translateY(-1px);
+  border-color: var(--state-calm-line);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.08);
+}
+
+.dark .twofa-ticket:hover {
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.35);
+}
+
+.twofa-ticket.active {
+  outline: 2px solid var(--state-calm);
+  outline-offset: 1px;
+}
+
+.twofa-ticket-icon {
+  width: 36px;
+  height: 36px;
+  border-radius: 6px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-family: var(--mono);
+  font-size: 14px;
+  font-weight: 800;
+  color: #ffffff;
+  flex-shrink: 0;
+}
+
+.twofa-ticket-info {
+  flex: 1;
+  min-width: 0;
+}
+
+.twofa-ticket-label {
+  font-size: 14.5px;
+  font-weight: 800;
+  color: var(--twofa-text);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.twofa-ticket-account {
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--twofa-text-dimmer);
+  font-family: var(--mono);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  margin-top: 1px;
+}
+
+.twofa-ticket-code {
+  font-family: var(--mono);
+  font-size: 17px;
+  font-weight: 800;
+  color: var(--twofa-text);
+  letter-spacing: 0.08em;
+  flex-shrink: 0;
+  min-width: 96px;
+  text-align: right;
+  cursor: pointer;
+  transition: color 0.3s;
+}
+
+.twofa-ticket-code.warn   { color: var(--state-warn); }
+.twofa-ticket-code.danger { color: var(--state-danger); }
+
+.twofa-ticket-ring {
+  width: 24px;
+  height: 24px;
+  flex-shrink: 0;
+}
+
+.twofa-ticket-ring-fill {
+  stroke: var(--state-calm) !important;
+  transition: stroke-dashoffset 0.95s linear, stroke 0.3s ease;
+}
+
+.twofa-ticket-ring-fill.calm   { stroke: var(--state-calm) !important; }
+.twofa-ticket-ring-fill.warn   { stroke: var(--state-warn) !important; }
+.twofa-ticket-ring-fill.danger { stroke: var(--state-danger) !important; }
+
+.twofa-ticket-actions {
+  display: flex;
+  gap: 3px;
+  flex-shrink: 0;
+  opacity: 0;
+  transition: opacity 0.15s;
+}
+
+.twofa-ticket:hover .twofa-ticket-actions {
+  opacity: 1;
+}
+
+.twofa-ticket-btn {
+  width: 28px;
+  height: 28px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--twofa-text-dim);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+
+.twofa-ticket-btn:hover {
+  color: var(--twofa-text);
+  background: var(--twofa-surface-2);
+}
+
+.twofa-ticket-btn.del:hover {
+  color: var(--state-danger);
+  background: var(--state-danger-soft);
+}
+
+.twofa-ticket-btn svg {
+  width: 14px;
+  height: 14px;
+}
+
+.twofa-vault-empty {
+  text-align: center;
+  padding: 36px 16px;
+  border: 1.5px dashed var(--twofa-border);
+  border-radius: 6px;
+  color: var(--twofa-text-dimmer);
+  font-size: 13.5px;
+  font-weight: 500;
+  line-height: 1.6;
+}
+
+.twofa-vault-empty b {
+  color: var(--state-calm);
+  font-weight: 700;
+}
+
+/* ============================================================
+   SETTINGS DRAWER
+   ============================================================ */
+.twofa-panel-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.5);
+  backdrop-filter: blur(3px);
+  z-index: 100;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.25s ease;
+}
+
+.twofa-panel-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.twofa-panel {
+  position: fixed;
+  top: 0;
+  right: 0;
+  bottom: 0;
+  width: min(380px, 90vw);
+  background: var(--twofa-card-bg);
+  border-left: 1.5px solid var(--twofa-border);
+  z-index: 101;
+  transform: translateX(100%);
+  transition: transform 0.3s cubic-bezier(0.16, 1, 0.3, 1);
+  display: flex;
+  flex-direction: column;
+  box-shadow: -4px 0 24px rgba(0, 0, 0, 0.15);
+}
+
+.twofa-panel.open {
+  transform: translateX(0);
+}
+
+.twofa-panel-head {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  padding: 18px 20px;
+  border-bottom: 1.5px solid var(--twofa-border);
+  flex-shrink: 0;
+}
+
+.twofa-panel-head h3 {
+  font-size: 15px;
+  font-weight: 800;
+  color: var(--twofa-text);
+}
+
+.twofa-panel-close {
+  width: 30px;
+  height: 30px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--twofa-text-dim);
+  cursor: pointer;
+  border-radius: 4px;
+  transition: all 0.15s;
+}
+
+.twofa-panel-close:hover {
+  background: var(--twofa-surface);
+  color: var(--twofa-text);
+}
+
+.twofa-panel-close svg {
+  width: 16px;
+  height: 16px;
+}
+
+.twofa-panel-body {
+  flex: 1;
+  overflow-y: auto;
+  padding: 20px;
+}
+
+.twofa-panel-section {
+  margin-bottom: 24px;
+}
+
+.twofa-panel-section-title {
+  font-size: 12px;
+  font-weight: 800;
+  letter-spacing: 0.04em;
+  text-transform: uppercase;
+  color: var(--twofa-text-dim);
+  margin-bottom: 10px;
+}
+
+.twofa-panel-btn {
+  width: 100%;
+  padding: 11px 14px;
+  background: var(--twofa-surface);
+  border: 1.5px solid var(--twofa-border);
+  border-radius: 6px;
+  color: var(--twofa-text);
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  transition: all 0.15s;
+  text-align: left;
+  display: flex;
+  align-items: center;
+  gap: 10px;
+  margin-bottom: 9px;
+}
+
+.twofa-panel-btn:hover {
+  border-color: var(--twofa-border-strong);
+  background: var(--twofa-surface-2);
+}
+
+.twofa-panel-btn svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+  color: var(--twofa-text-dim);
+}
+
+.twofa-panel-btn.danger {
+  color: var(--state-danger);
+  border-color: var(--state-danger-line);
+  background: var(--state-danger-soft);
+}
+
+.twofa-panel-btn.danger:hover {
+  filter: brightness(0.95);
+  border-color: var(--state-danger);
+}
+
+.twofa-panel-btn.danger svg {
+  color: var(--state-danger);
+}
+
+.twofa-panel-footer {
+  padding: 16px 20px;
+  border-top: 1.5px solid var(--twofa-border);
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--twofa-text-dimmer);
+  text-align: center;
+  flex-shrink: 0;
+  line-height: 1.6;
+}
+
+/* ============================================================
+   MODALS (QR / Rename)
+   ============================================================ */
+.twofa-modal-overlay {
+  position: fixed;
+  inset: 0;
+  background: rgba(0, 0, 0, 0.55);
+  backdrop-filter: blur(3px);
+  z-index: 200;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  padding: 20px;
+  opacity: 0;
+  visibility: hidden;
+  transition: all 0.2s ease;
+}
+
+.twofa-modal-overlay.open {
+  opacity: 1;
+  visibility: visible;
+}
+
+.twofa-modal-card {
+  width: min(360px, 100%);
+  background: var(--twofa-card-bg);
+  border: 1.5px solid var(--twofa-border);
+  border-radius: 8px;
+  padding: 22px;
+  transform: scale(0.96) translateY(6px);
+  transition: transform 0.2s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 10px 30px rgba(0, 0, 0, 0.2);
+}
+
+.twofa-modal-overlay.open .twofa-modal-card {
+  transform: scale(1) translateY(0);
+}
+
+.twofa-modal-title {
+  font-size: 15px;
+  font-weight: 800;
+  margin-bottom: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  color: var(--twofa-text);
+}
+
+.twofa-modal-close {
+  width: 26px;
+  height: 26px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  background: none;
+  border: none;
+  color: var(--twofa-text-dim);
+  cursor: pointer;
+  border-radius: 4px;
+}
+
+.twofa-modal-close:hover {
+  background: var(--twofa-surface);
+  color: var(--twofa-text);
+}
+
+.twofa-modal-close svg {
+  width: 16px;
+  height: 16px;
+}
+
+.twofa-qr-box {
+  background: #ffffff;
+  border: 1.5px solid var(--twofa-border);
+  border-radius: 6px;
+  padding: 16px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  margin-bottom: 14px;
+  min-height: 220px;
+}
+
+.twofa-qr-hint {
+  font-size: 12.5px;
+  font-weight: 500;
+  color: var(--twofa-text-dimmer);
+  text-align: center;
+  line-height: 1.65;
+}
+
+.twofa-qr-hint code {
+  background: var(--twofa-surface);
+  border: 1.5px solid var(--twofa-border);
+  padding: 3px 8px;
+  border-radius: 4px;
+  color: var(--state-calm);
+  font-family: var(--mono);
+  font-size: 13px;
+  font-weight: 700;
+}
+
+.twofa-modal-field {
+  margin-bottom: 14px;
+}
+
+.twofa-modal-field label {
+  display: block;
+  font-size: 12.5px;
+  font-weight: 700;
+  color: var(--twofa-text-dim);
+  margin-bottom: 6px;
+}
+
+.twofa-modal-field input {
+  width: 100%;
+  padding: 10px 12px;
+  background: var(--twofa-surface);
+  border: 1.5px solid var(--twofa-border);
+  border-radius: 6px;
+  color: var(--twofa-text);
+  font-size: 13.5px;
+  outline: none;
+  transition: border-color 0.15s;
+}
+
+.twofa-modal-field input:focus {
+  border-color: var(--state-calm);
+}
+
+.twofa-modal-actions {
+  display: flex;
+  gap: 8px;
+  margin-top: 18px;
+}
+
+.twofa-modal-btn {
+  flex: 1;
+  padding: 10px;
+  border-radius: 6px;
+  font-size: 13.5px;
+  font-weight: 600;
+  cursor: pointer;
+  border: 1.5px solid var(--twofa-border);
+  background: var(--twofa-surface);
+  color: var(--twofa-text);
+  transition: all 0.15s;
+}
+
+.twofa-modal-btn:hover {
+  background: var(--twofa-surface-2);
+  border-color: var(--twofa-border-strong);
+}
+
+.twofa-modal-btn.primary {
+  background: var(--state-calm);
+  border-color: var(--state-calm);
+  color: #ffffff;
+}
+
+.twofa-modal-btn.primary:hover {
+  opacity: 0.92;
+}
+
+/* ============================================================
+   TOASTS
+   ============================================================ */
+.twofa-toast-wrap {
+  position: fixed;
+  bottom: 22px;
+  left: 50%;
+  transform: translateX(-50%);
+  z-index: 9999;
+  pointer-events: none;
+  display: flex;
+  flex-direction: column-reverse;
+  gap: 6px;
+  align-items: center;
+}
+
+.twofa-toast {
+  padding: 9px 18px;
+  background: var(--twofa-card-bg);
+  border: 1.5px solid var(--twofa-border);
+  border-radius: 6px;
+  font-size: 13px;
+  font-weight: 600;
+  color: var(--twofa-text);
+  white-space: nowrap;
+  opacity: 0;
+  transform: translateY(8px);
+  transition: all 0.25s cubic-bezier(0.16, 1, 0.3, 1);
+  box-shadow: 0 4px 16px rgba(0, 0, 0, 0.15);
+  pointer-events: auto;
+}
+
+.twofa-toast.show {
+  opacity: 1;
+  transform: translateY(0);
+}
+
+.twofa-toast.g {
+  border-color: var(--approved);
+  color: var(--approved);
+}
+
+.twofa-toast.r {
+  border-color: var(--state-danger);
+  color: var(--state-danger);
+}
+
+/* ============================================================
+   PRIVACY NOTICE & FOOTER
+   ============================================================ */
+.twofa-privacy-card {
+  margin-top: 1.5rem;
+  padding: 16px 20px;
+  background: var(--twofa-surface);
+  border: 1.5px solid var(--twofa-border);
+  border-radius: 8px;
+  text-align: center;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  gap: 6px;
+}
+
+.twofa-privacy-badge {
+  display: inline-flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 13px;
+  font-weight: 700;
+  color: var(--state-calm);
+}
+
+.twofa-privacy-badge svg {
+  width: 16px;
+  height: 16px;
+  flex-shrink: 0;
+}
+
+.twofa-privacy-text {
+  margin: 0;
+  font-size: 12.5px;
+  color: var(--twofa-text-dimmer);
+  line-height: 1.6;
+  max-width: 680px;
+}
+
+.twofa-footer {
+  padding: 14px 0 4px;
+  text-align: center;
+  font-size: 12px;
+  font-weight: 500;
+  color: var(--twofa-text-dimmer);
+  flex-shrink: 0;
+  letter-spacing: 0.02em;
+}
+
+.twofa-footer kbd {
+  display: inline-block;
+  padding: 2px 7px;
+  background: var(--twofa-surface);
+  border: 1.5px solid var(--twofa-border);
+  border-radius: 4px;
+  font-size: 11px;
+  font-weight: 600;
+  vertical-align: 1px;
+  margin: 0 2px;
+  color: var(--twofa-text-dim);
+  font-family: var(--mono);
+}
+
+/* ============================================================
+   RESPONSIVE
+   ============================================================ */
+@media (max-width: 480px) {
+  .twofa-dial {
+    width: 175px;
+    height: 175px;
+  }
+  .twofa-dial-code {
+    font-size: 23px;
+    letter-spacing: 0.05em;
+  }
+  .twofa-ticket-code {
+    font-size: 15px;
+    min-width: 75px;
+  }
+  .twofa-ticket-ring {
+    display: none;
+  }
+  .twofa-spec-row {
+    flex-direction: column;
+  }
+  .twofa-paste-btn {
+    padding: 10px;
+    justify-content: center;
+  }
+  .twofa-readout-foot {
+    gap: 8px;
+  }
+  .twofa-instr-btn {
+    padding: 8px 12px;
+    font-size: 12px;
+  }
+}

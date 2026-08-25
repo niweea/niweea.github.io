@@ -1,0 +1,22 @@
+{{ define "main" }}
+<script src="https://cdnjs.cloudflare.com/ajax/libs/qrcodejs/1.0.0/qrcode.min.js"></script>
+
+<div class="twofa-page my-4">
+  <div id="twofa-root"></div>
+</div>
+
+{{/* Build the React 2FA app via Hugo Pipes / esbuild */}}
+{{ $jsOpts := dict
+    "targetPath" "js/twofa/app.js"
+    "format"     "esm"
+    "jsx"        "automatic"
+    "jsxImportSource" "react"
+    "minify"     (not hugo.IsDevelopment)
+    "sourceMap"  (cond hugo.IsDevelopment "inline" "")
+}}
+{{ $js := resources.Get "js/twofa/main.tsx" | js.Build $jsOpts | fingerprint }}
+<script type="module" src="{{ $js.RelPermalink }}"></script>
+
+{{ $css := resources.Get "css/twofa.css" | minify | fingerprint }}
+<link rel="stylesheet" href="{{ $css.RelPermalink }}">
+{{ end }}
