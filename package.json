@@ -6,9 +6,9 @@
     "download:models": "node scripts/download-models.js"
   },
   "dependencies": {
+    "onnxruntime-web": "1.21.0",
     "react": "^19.0.0",
-    "react-dom": "^19.0.0",
-    "onnxruntime-web": "^1.21.0"
+    "react-dom": "^19.0.0"
   },
   "devDependencies": {
     "@types/react": "^19.0.0",
