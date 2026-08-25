@@ -4,7 +4,8 @@ const https = require('https');
 
 const TARGET_DIR = path.join(__dirname, '..', 'static', 'models', 'ocr');
 
-const ASSETS = [
+const ALL_ASSETS = [
+  // ── Tiny ───────────────────────────────────────────────
   {
     name: 'tiny_det.onnx',
     urls: [
@@ -12,6 +13,7 @@ const ASSETS = [
       'https://hf-mirror.com/PaddlePaddle/PP-OCRv6_tiny_det_onnx/resolve/main/inference.onnx',
     ],
     minSize: 1000000, // ~1.78 MB
+    scale: 'tiny',
   },
   {
     name: 'tiny_rec.onnx',
@@ -20,6 +22,7 @@ const ASSETS = [
       'https://hf-mirror.com/PaddlePaddle/PP-OCRv6_tiny_rec_onnx/resolve/main/inference.onnx',
     ],
     minSize: 3000000, // ~4.46 MB
+    scale: 'tiny',
   },
   {
     name: 'inference.yml',
@@ -28,6 +31,45 @@ const ASSETS = [
       'https://hf-mirror.com/PaddlePaddle/PP-OCRv6_tiny_rec_onnx/raw/main/inference.yml',
     ],
     minSize: 10000, // ~54 KB
+    scale: 'tiny',
+  },
+  // ── Small ──────────────────────────────────────────────
+  {
+    name: 'small_det.onnx',
+    urls: [
+      'https://huggingface.co/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/main/inference.onnx',
+      'https://hf-mirror.com/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/main/inference.onnx',
+    ],
+    minSize: 5000000, // ~9.88 MB
+    scale: 'small',
+  },
+  {
+    name: 'small_rec.onnx',
+    urls: [
+      'https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/main/inference.onnx',
+      'https://hf-mirror.com/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/main/inference.onnx',
+    ],
+    minSize: 15000000, // ~21.16 MB
+    scale: 'small',
+  },
+  // ── Medium ─────────────────────────────────────────────
+  {
+    name: 'medium_det.onnx',
+    urls: [
+      'https://huggingface.co/PaddlePaddle/PP-OCRv6_medium_det_onnx/resolve/main/inference.onnx',
+      'https://hf-mirror.com/PaddlePaddle/PP-OCRv6_medium_det_onnx/resolve/main/inference.onnx',
+    ],
+    minSize: 40000000, // ~62.03 MB
+    scale: 'medium',
+  },
+  {
+    name: 'medium_rec.onnx',
+    urls: [
+      'https://huggingface.co/PaddlePaddle/PP-OCRv6_medium_rec_onnx/resolve/main/inference.onnx',
+      'https://hf-mirror.com/PaddlePaddle/PP-OCRv6_medium_rec_onnx/resolve/main/inference.onnx',
+    ],
+    minSize: 50000000, // ~76.55 MB
+    scale: 'medium',
   },
 ];
 
@@ -88,8 +130,14 @@ async function fetchAsset(asset) {
 
 async function main() {
   fs.mkdirSync(TARGET_DIR, { recursive: true });
-  console.log('[OCR Models] Preparing OCR model assets in static/models/ocr/ ...');
-  for (const asset of ASSETS) {
+
+  const targetScale = process.argv[2] || process.env.MODEL_SCALE || 'all';
+  const assetsToDownload = targetScale === 'all'
+    ? ALL_ASSETS
+    : ALL_ASSETS.filter(a => a.scale === targetScale || a.scale === 'tiny');
+
+  console.log(`[OCR Models] Preparing OCR model assets (target: ${targetScale}) in static/models/ocr/ ...`);
+  for (const asset of assetsToDownload) {
     await fetchAsset(asset);
   }
   console.log('[OCR Models] All assets ready for build!');

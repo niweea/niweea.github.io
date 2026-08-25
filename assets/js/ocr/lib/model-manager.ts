@@ -9,7 +9,7 @@ import * as ort from 'onnxruntime-web';
 import type { ModelManifest, ModelManifestEntry, ModelScale, OrtBackend, ProgressMessage } from '../../types';
 
 // jsDelivr CDN for onnxruntime-web WASM files — avoids copying files from node_modules
-const ORT_VERSION = '1.21.0';
+const ORT_VERSION = '1.29.0';
 export const WASM_CDN = `https://cdn.jsdelivr.net/npm/onnxruntime-web@${ORT_VERSION}/dist/`;
 
 export const MANIFEST_URL = '/models/ocr/manifest.json';

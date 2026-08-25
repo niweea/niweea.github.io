@@ -8,16 +8,16 @@
     "recSizeBytes": 4462639
   },
   "small": {
-    "det": "https://hf-mirror.com/PaddlePaddle/PP-OCRv6_small_det_onnx/resolve/main/inference.onnx",
-    "rec": "https://hf-mirror.com/PaddlePaddle/PP-OCRv6_small_rec_onnx/resolve/main/inference.onnx",
-    "dict": "https://hf-mirror.com/PaddlePaddle/PP-OCRv6_small_rec_onnx/raw/main/inference.yml",
+    "det": "/models/ocr/small_det.onnx",
+    "rec": "/models/ocr/small_rec.onnx",
+    "dict": "/models/ocr/inference.yml",
     "detSizeBytes": 9880512,
     "recSizeBytes": 21159378
   },
   "medium": {
-    "det": "https://hf-mirror.com/PaddlePaddle/PP-OCRv6_medium_det_onnx/resolve/main/inference.onnx",
-    "rec": "https://hf-mirror.com/PaddlePaddle/PP-OCRv6_medium_rec_onnx/resolve/main/inference.onnx",
-    "dict": "https://hf-mirror.com/PaddlePaddle/PP-OCRv6_medium_rec_onnx/raw/main/inference.yml",
+    "det": "/models/ocr/medium_det.onnx",
+    "rec": "/models/ocr/medium_rec.onnx",
+    "dict": "/models/ocr/inference.yml",
     "detSizeBytes": 62032837,
     "recSizeBytes": 76554979
   }
