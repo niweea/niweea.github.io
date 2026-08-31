@@ -182,7 +182,7 @@ export function OcrApp() {
       {/* Feature cards */}
       <div className="ocr-feature-grid">
         {[
-          { icon: '🌐', title: '多语言混合支持', desc: '6,900+ 字符字典库，支持简繁中文、英数及标点' },
+          { icon: '🌐', title: '多语言混合支持', desc: '18,700+ 字符全量字典库，支持简繁中文、英数及标点' },
           { icon: '🔒', title: '纯本地隐私安全', desc: '基于 WebAssembly 端侧推理，零数据上传服务器' },
           { icon: '⚡', title: '三档模型自由切换', desc: 'Tiny (6 MB) · Small (30 MB) · Medium (139 MB)' },
         ].map(f => (

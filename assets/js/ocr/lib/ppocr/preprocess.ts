@@ -40,9 +40,9 @@ export function preprocessForDet(imageData: ImageData): DetPreprocessResult {
   let scale = Math.min(DET_MAX_SIDE / Math.max(origW, origH), 1.0);
   let inputW = Math.round(origW * scale);
   let inputH = Math.round(origH * scale);
-  // Round up to nearest multiple of 32
-  inputW = Math.ceil(inputW / 32) * 32;
-  inputH = Math.ceil(inputH / 32) * 32;
+  // Round up to nearest multiple of 32 (min 32)
+  inputW = Math.max(32, Math.ceil(inputW / 32) * 32);
+  inputH = Math.max(32, Math.ceil(inputH / 32) * 32);
 
   const scaleW = origW / inputW;
   const scaleH = origH / inputH;
