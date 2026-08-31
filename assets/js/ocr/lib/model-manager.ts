@@ -6,7 +6,7 @@
  */
 
 import * as ort from 'onnxruntime-web';
-import type { ModelManifest, ModelManifestEntry, ModelScale, OrtBackend, ProgressMessage } from '../../types';
+import type { ModelManifest, ModelManifestEntry, ModelScale, OrtBackend, ProgressMessage } from '../types';
 
 // Local WASM runtime path served with the site — 100% version matched with node_modules
 export const WASM_PATH = '/ort/';

@@ -93,6 +93,10 @@ export function postprocessDet(
       const score = scoreSum / pixels.length;
       if (score < DET_BOX_THRESH) continue;
 
+      const w = maxX - minX;
+      const h = maxY - minY;
+      if (w < DET_MIN_SIZE || h < DET_MIN_SIZE) continue;
+
       // Expand (unclip) the box using standard DBNet polygon distance formula:
       // distance = (area * unclip_ratio) / perimeter
       const distance = (w * h * DET_UNCLIP_RATIO) / Math.max(2 * (w + h), 1);

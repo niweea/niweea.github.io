@@ -15,7 +15,7 @@
 import * as ort from 'onnxruntime-web';
 import type {
   WorkerInCommand, InitCommand, RecognizeCommand,
-  BoundingBox, OcrStats,
+  BoundingBox, OcrStats, ModelScale,
 } from '../types';
 import { loadModel, type LoadedModel } from './model-manager';
 import { preprocessForDet, preprocessForRec } from './ppocr/preprocess';
