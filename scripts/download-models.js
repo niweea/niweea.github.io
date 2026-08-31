@@ -25,12 +25,12 @@ const ALL_ASSETS = [
     scale: 'tiny',
   },
   {
-    name: 'inference.yml',
+    name: 'tiny_dict.yml',
     urls: [
       'https://huggingface.co/PaddlePaddle/PP-OCRv6_tiny_rec_onnx/raw/main/inference.yml',
       'https://hf-mirror.com/PaddlePaddle/PP-OCRv6_tiny_rec_onnx/raw/main/inference.yml',
     ],
-    minSize: 10000, // ~54 KB
+    minSize: 10000, // ~55 KB
     scale: 'tiny',
   },
   // ── Small ──────────────────────────────────────────────
@@ -52,6 +52,15 @@ const ALL_ASSETS = [
     minSize: 15000000, // ~21.16 MB
     scale: 'small',
   },
+  {
+    name: 'small_dict.yml',
+    urls: [
+      'https://huggingface.co/PaddlePaddle/PP-OCRv6_small_rec_onnx/raw/main/inference.yml',
+      'https://hf-mirror.com/PaddlePaddle/PP-OCRv6_small_rec_onnx/raw/main/inference.yml',
+    ],
+    minSize: 50000, // ~150 KB
+    scale: 'small',
+  },
   // ── Medium ─────────────────────────────────────────────
   {
     name: 'medium_det.onnx',
@@ -69,6 +78,15 @@ const ALL_ASSETS = [
       'https://hf-mirror.com/PaddlePaddle/PP-OCRv6_medium_rec_onnx/resolve/main/inference.onnx',
     ],
     minSize: 50000000, // ~76.55 MB
+    scale: 'medium',
+  },
+  {
+    name: 'medium_dict.yml',
+    urls: [
+      'https://huggingface.co/PaddlePaddle/PP-OCRv6_medium_rec_onnx/raw/main/inference.yml',
+      'https://hf-mirror.com/PaddlePaddle/PP-OCRv6_medium_rec_onnx/raw/main/inference.yml',
+    ],
+    minSize: 50000, // ~150 KB
     scale: 'medium',
   },
 ];

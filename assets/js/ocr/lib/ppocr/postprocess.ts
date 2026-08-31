@@ -17,7 +17,7 @@
 
 export const DET_THRESH        = 0.2;   // binarization threshold (from inference.yml)
 export const DET_BOX_THRESH    = 0.4;   // minimum mean score inside a box (from inference.yml)
-export const DET_UNCLIP_RATIO  = 1.4;   // box expansion ratio (from inference.yml)
+export const DET_UNCLIP_RATIO  = 1.5;   // box expansion ratio (matches official PaddleOCR demo)
 export const DET_MIN_SIZE      = 4;     // minimum box side in pixels
 
 export interface DetBox {
@@ -93,17 +93,13 @@ export function postprocessDet(
       const score = scoreSum / pixels.length;
       if (score < DET_BOX_THRESH) continue;
 
-      // Expand (unclip) the box
-      const w = maxX - minX;
-      const h = maxY - minY;
-      if (w < DET_MIN_SIZE || h < DET_MIN_SIZE) continue;
-
-      const expandW = (w * DET_UNCLIP_RATIO - w) / 2;
-      const expandH = (h * DET_UNCLIP_RATIO - h) / 2;
-      const exMinX = Math.max(0, minX - expandW);
-      const exMinY = Math.max(0, minY - expandH);
-      const exMaxX = Math.min(mapW - 1, maxX + expandW);
-      const exMaxY = Math.min(mapH - 1, maxY + expandH);
+      // Expand (unclip) the box using standard DBNet polygon distance formula:
+      // distance = (area * unclip_ratio) / perimeter
+      const distance = (w * h * DET_UNCLIP_RATIO) / Math.max(2 * (w + h), 1);
+      const exMinX = Math.max(0, minX - distance);
+      const exMinY = Math.max(0, minY - distance);
+      const exMaxX = Math.min(mapW - 1, maxX + distance);
+      const exMaxY = Math.min(mapH - 1, maxY + distance);
 
       // Convert back to original image coordinates
       const toOrigX = (v: number) => v * scaleW;
@@ -195,7 +191,7 @@ export function postprocessRec(
 
       // blank=0 is skipped; dict is 0-indexed to char index 1
       const ch = (maxIdx > 0 && maxIdx <= dict.length) ? (dict[maxIdx - 1] ?? '') : '';
-      if (ch && ch !== '?') {
+      if (ch) {
         text += ch;
         confSum += prob;
         confCount++;
@@ -218,28 +214,37 @@ export function parseDict(content: string): string[] {
     const lines = content.split('\n');
     let inDict = false;
     const dict: string[] = [];
-    for (const line of lines) {
-      if (line.startsWith('  character_dict:')) {
-        inDict = true;
+    for (const rawLine of lines) {
+      const line = rawLine.trimEnd();
+      if (!inDict) {
+        if (line.trim() === 'character_dict:') {
+          inDict = true;
+        }
         continue;
       }
-      if (inDict) {
-        if (!line.startsWith('  - ')) {
-          if (line.trim() && !line.startsWith('  #')) break;
-          continue;
-        }
-        let val = line.slice(4);
-        if ((val.startsWith("'") && val.endsWith("'")) || (val.startsWith('"') && val.endsWith('"'))) {
-          val = val.slice(1, -1);
-          if (val === "''") val = "'";
+      const match = line.match(/^\s*-\s*(.*)$/);
+      if (match) {
+        let val = match[1].trim();
+        if (val.startsWith("'") && val.endsWith("'") && val.length >= 2) {
+          val = val.slice(1, -1).replace(/''/g, "'");
+        } else if (val.startsWith('"') && val.endsWith('"') && val.length >= 2) {
+          try {
+            val = JSON.parse(val);
+          } catch {
+            val = val.slice(1, -1);
+          }
         }
         dict.push(val);
+      } else if (line.trim() && !line.startsWith('#') && !line.startsWith(' ')) {
+        break;
       }
     }
-    if (!dict.includes(' ')) {
-      dict.push(' ');
+    if (dict.length > 0) {
+      if (!dict.includes(' ')) {
+        dict.push(' ');
+      }
+      return dict;
     }
-    return dict;
   }
 
   // Otherwise treat as plain newline-separated dictionary (like ppocr_keys_v1.txt)

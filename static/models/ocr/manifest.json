@@ -1,23 +1,23 @@
 {
-  "version": "1",
+  "version": "2",
   "tiny": {
     "det": "/models/ocr/tiny_det.onnx",
     "rec": "/models/ocr/tiny_rec.onnx",
-    "dict": "/models/ocr/inference.yml",
+    "dict": "/models/ocr/tiny_dict.yml",
     "detSizeBytes": 1780590,
     "recSizeBytes": 4462639
   },
   "small": {
     "det": "/models/ocr/small_det.onnx",
     "rec": "/models/ocr/small_rec.onnx",
-    "dict": "/models/ocr/inference.yml",
+    "dict": "/models/ocr/small_dict.yml",
     "detSizeBytes": 9880512,
     "recSizeBytes": 21159378
   },
   "medium": {
     "det": "/models/ocr/medium_det.onnx",
     "rec": "/models/ocr/medium_rec.onnx",
-    "dict": "/models/ocr/inference.yml",
+    "dict": "/models/ocr/medium_dict.yml",
     "detSizeBytes": 62032837,
     "recSizeBytes": 76554979
   }

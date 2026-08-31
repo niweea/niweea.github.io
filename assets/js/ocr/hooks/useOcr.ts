@@ -93,14 +93,14 @@ export function useOcr() {
   const [state, dispatch] = useReducer(reducer, {
     modelStatus: 'idle',
     ocrStatus: 'idle',
-    modelScale: 'tiny',
+    modelScale: 'small',
     backend: 'wasm',
     progress: null,
     result: null,
   });
 
   const workerRef = useRef<Worker | null>(null);
-  const pendingScaleRef = useRef<ModelScale>('tiny');
+  const pendingScaleRef = useRef<ModelScale>('small');
   const pendingBackendRef = useRef<OrtBackend>('wasm');
 
   // ── Worker message handler ─────────────────────────────────────
@@ -167,7 +167,7 @@ export function useOcr() {
 
   // ── Auto-init on mount ────────────────────────────────────────
   useEffect(() => {
-    initModel('tiny', 'wasm');
+    initModel('small', 'wasm');
     return () => {
       workerRef.current?.terminate();
     };
@@ -187,7 +187,7 @@ export function useOcr() {
   const recognize = useCallback((imageData: ImageData) => {
     if (!workerRef.current || state.modelStatus !== 'ready') return;
     dispatch({ type: 'OCR_START' });
-    workerRef.current.postMessage({ type: 'RECOGNIZE', imageData }, [imageData.data.buffer]);
+    workerRef.current.postMessage({ type: 'RECOGNIZE', imageData });
   }, [state.modelStatus]);
 
   const setModelScale = useCallback((scale: ModelScale) => {

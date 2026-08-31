@@ -13,7 +13,7 @@ export const WASM_PATH = '/ort/';
 
 export const MANIFEST_URL = '/models/ocr/manifest.json';
 
-const CACHE_NAME = 'ppocr-models-v2';
+const CACHE_NAME = 'ppocr-models-v3';
 
 // ── Fetch with progress reporting ────────────────────────────────────────────
 
@@ -144,9 +144,18 @@ export function parseDict(text: string): string[] {
         break;
       }
     }
-    if (dict.length > 0) return dict;
+    if (dict.length > 0) {
+      if (!dict.includes(' ')) {
+        dict.push(' ');
+      }
+      return dict;
+    }
   }
-  return text.split('\n').map((l: string) => l.trim()).filter(Boolean);
+  const lines = text.split(/\r?\n/).map((l: string) => l.trim()).filter(Boolean);
+  if (!lines.includes(' ')) {
+    lines.push(' ');
+  }
+  return lines;
 }
 
 // ── Main load function ────────────────────────────────────────────────────────

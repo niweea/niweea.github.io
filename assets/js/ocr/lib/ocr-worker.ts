@@ -22,7 +22,7 @@ import { preprocessForDet, preprocessForRec } from './ppocr/preprocess';
 import { postprocessDet, postprocessRec } from './ppocr/postprocess';
 
 let currentModel: LoadedModel | null = null;
-let currentModelScale: ModelScale = 'tiny';
+let currentModelScale: ModelScale = 'small';
 
 async function handleInit(cmd: InitCommand) {
   try {

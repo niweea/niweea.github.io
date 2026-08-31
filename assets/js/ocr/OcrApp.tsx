@@ -101,7 +101,7 @@ export function OcrApp() {
       small: '约 30 MB · 均衡推荐',
       medium: '约 139 MB · 最精准',
     };
-    if (scale !== 'tiny') {
+    if (scale !== 'small') {
       addToast(`正在切换到 ${scale} 模型（${sizeHint[scale]}）…`, 'info');
     }
     setModelScale(scale);
