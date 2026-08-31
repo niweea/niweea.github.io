@@ -2,6 +2,9 @@
 title: "虚拟化与容器化漫谈"
 date: 2021-11-03T00:52:56+08:00
 draft: false
+tags: ["虚拟化", "容器", "Docker", "KVM", "Linux", "云原生"]
+categories: ["系统架构"]
+description: "从硬件与操作系统抽象层深入浅出剖析虚拟化与容器化技术：KVM、QEMU、Xen 架构演进，Docker 与 LXC 容器原理及虚拟化发展历史。"
 ---
 
 ## 虚拟化的概念

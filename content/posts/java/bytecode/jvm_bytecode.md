@@ -1,9 +1,9 @@
 ---
 title: "JVM字节码理解"
 date: 2022-12-04T18:12:22+08:00
-tags: ["Java", "JVM", "字节码"]
+tags: ["Java", "JVM", "字节码", "javap", "底层原理"]
 categories: ["Java"]
-summary: "从 class 文件结构、常量池到字节码指令，结合 javap 与编译器行为理解 JVM 如何执行 Java 代码。"
+description: "深入探索 JVM 字节码底层机制：从 Class 文件结构、常量池组织、运行时数据区到常用字节码指令集，结合 javap 分析 Java 编译运行原理。"
 ---
 
 # JVM 概览

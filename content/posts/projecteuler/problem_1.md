@@ -1,8 +1,9 @@
 ---
-title: "Multiples of 3 and 5"
+title: "欧拉计划 Problem 1：3或5的倍数（Multiples of 3 and 5）"
 date: 2020-10-28T17:40:00+08:00
-tags: ["欧拉计划", "数学"]
+tags: ["欧拉计划", "Project Euler", "数学", "算法", "题解"]
 categories: ["欧拉计划"]
+description: "Project Euler Problem 1 题解与算法分析：求 1000 以内所有 3 或 5 的倍数之和，涵盖暴力循环解法与等差数列公式 O(1) 数学优化。"
 ---
 
 Multiples of 3 and 5

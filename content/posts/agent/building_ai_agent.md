@@ -1,6 +1,9 @@
 ---
 title: "【转译】从零开始：用 Python 构建一个 AI Agent"
 date: 2025-10-04T18:12:22+08:00
+tags: ["AI Agent", "大模型", "Python", "LLM", "人工智能"]
+categories: ["AI Agent"]
+description: "深入剖析大模型智能体底层机制，不依赖第三方框架，使用 Python 和大模型 API 从零实现单智能体系统（Agent Loop、Memory、Tools）。"
 ---
 
 此文翻译自Leonie Monigatti的 [Building an AI agent from scratch in Python](https://www.leoniemonigatti.com/blog/ai-agent-from-scratch-in-python.html)

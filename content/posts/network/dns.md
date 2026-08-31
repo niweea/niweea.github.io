@@ -1,7 +1,9 @@
 ---
 title: "你必须知道的DNS那些事"
 date: 2022-07-19T11:10:06+08:00
-categories: ["DNS"]
+tags: ["DNS", "计算机网络", "网络协议", "域名解析", "运维"]
+categories: ["计算机网络"]
+description: "深入讲解 DNS（域名系统）的核心概念与工作原理：从域名层次结构、根域名服务器、递归与迭代查询过程到常见 DNS 记录类型与解析诊断。"
 ---
 
 `DNS`（Domain Name System） 域名系统

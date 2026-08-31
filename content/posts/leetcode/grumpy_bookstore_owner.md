@@ -1,7 +1,9 @@
 ---
-title: "爱生气的书店老板"
+title: "爱生气的书店老板（LeetCode 1052）"
 date: 2021-02-24T18:10:06+08:00
-categories: ["leetcode"]
+tags: ["LeetCode", "滑动窗口", "算法", "题解", "Java"]
+categories: ["LeetCode"]
+description: "LeetCode 1052 题「爱生气的书店老板」详细题解与算法思路：利用滑动窗口（Sliding Window）技巧求出在限定情绪抑制期内的最大满意客户数量。"
 ---
 
 今天，书店老板有一家店打算试营业 customers.length 分钟。每分钟都有一些顾客（customers[i]）会进入书店，所有这些顾客都会在那一分钟结束后离开。

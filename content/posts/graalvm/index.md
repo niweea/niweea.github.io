@@ -2,9 +2,9 @@
 title: "GraalVM入门"
 date: 2024-04-11T09:58:32+08:00
 draft: false
-tags: ["GraalVM", "Java", "Native Image", "AOT"]
+tags: ["GraalVM", "Java", "Native Image", "AOT", "JVM", "云原生"]
 categories: ["Java"]
-summary: "从 HotSpot 生命周期到 GraalVM 架构、Native Image 静态编译与命令行/Maven 构建入门。"
+description: "从 HotSpot JVM 生命周期到 GraalVM 架构原理，详细讲解 GraalVM AOT 静态编译、Native Image 原生镜像构建及 Maven 插件实战。"
 ---
 
 # HotSpot JVM

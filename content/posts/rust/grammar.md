@@ -1,8 +1,9 @@
 ---
-title: "Rust奇奇怪怪的语法"
+title: "Rust奇奇怪怪的语法与实战特性"
 date: 2021-01-28T19:26:32+08:00
-tags: ["Rust"]
+tags: ["Rust", "编程语言", "语法特性", "Rust进阶"]
 categories: ["Rust"]
+description: "汇总梳理 Rust 语言中独特而精妙的语法特性：问号操作符错误传递、模式匹配高级用法、生命周期标注、闭包与迭代器语法糖。"
 ---
 
 Rust 语法奇奇怪怪的写法。

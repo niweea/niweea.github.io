@@ -1,8 +1,9 @@
 ---
-title: "Even Fibonacci numbers"
+title: "欧拉计划 Problem 2：偶数斐波那契数（Even Fibonacci numbers）"
 date: 2022-01-18T23:52:31+08:00
-tags: ["欧拉计划", "数学"]
+tags: ["欧拉计划", "Project Euler", "斐波那契数列", "数学", "算法", "题解"]
 categories: ["欧拉计划"]
+description: "Project Euler Problem 2 题解与优化分析：求 400 万以内所有偶数斐波那契数之和，从常规迭代到利用奇偶数规律与递推公式优化。"
 ---
 
 Even Fibonacci numbers

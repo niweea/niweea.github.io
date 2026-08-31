@@ -1,8 +1,9 @@
 ---
 title: "你必须知道的排重策略"
 date: 2021-06-08T18:59:58+08:00
-tags: ["排重", "Bloom filter", "BitMap"]
-categories: ["排重"]
+tags: ["排重", "Bloom filter", "BitMap", "海量数据", "算法"]
+categories: ["架构与算法"]
+description: "全面梳理海量数据排重技术与算法：从精确去重的 Array/Set/Map、BitMap/BitSet 到海量高并发场景下的布隆过滤器（Bloom Filter）与分布式排重方案。"
 ---
 
 ## 精准去重

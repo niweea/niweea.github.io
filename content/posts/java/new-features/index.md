@@ -1,6 +1,9 @@
 ---
 title: "从Java 8到Java 21的新特性"
 date: 2023-10-10T10:55:21+08:00
+tags: ["Java", "Java新特性", "Java 21", "虚拟线程", "Record"]
+categories: ["Java"]
+description: "系统盘点与深度梳理 Java 8 至 Java 21 LTS 版本的核心新特性：模块化（JPMS）、Local-Variable Type Inference、Switch 增强、Record、虚拟线程与模式匹配等。"
 ---
 
 

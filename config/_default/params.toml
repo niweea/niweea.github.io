@@ -37,9 +37,9 @@ fingerprintAlgorithm = "sha256"
 
 [article]
   showDate = true
-  showDateUpdated = false
+  showDateUpdated = true
   showAuthor = true
-  showBreadcrumbs = false
+  showBreadcrumbs = true
   showDraftLabel = true
   showEdit = false
   # editURL = "https://github.com/niweea/niweea.github.io"
@@ -95,7 +95,7 @@ fingerprintAlgorithm = "sha256"
   loading = "lazy"
 
 [verification]
-  # google = ""
+  google = "zmQrYhQ6qp5M4AwlLX8H8Hqcw_mu_8d5cU4DAlftrxo"
   # bing = ""
   # pinterest = ""
   # yandex = ""
